@@ -1,0 +1,98 @@
+Formulario con JComboBox para Puestos
+import javax.swing.*;
+import java.awt.event.*;
+import java.sql.*;
+
+public class FormularioEmpleado extends JFrame {
+    
+    private JTextField txtNombre, txtApellido;
+    private JComboBox<String> comboBoxPuestos;
+    private JButton btnGuardar, btnActualizar, btnEliminar;
+    private EmpleadoDAO empleadoDAO;
+
+    public FormularioEmpleado() {
+        setTitle("CRUD Empleados");
+        setSize(400, 300);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLayout(null);
+        
+        empleadoDAO = new EmpleadoDAO();
+        
+        JLabel lblNombre = new JLabel("Nombre:");
+        lblNombre.setBounds(20, 20, 80, 25);
+        add(lblNombre);
+        
+        txtNombre = new JTextField();
+        txtNombre.setBounds(100, 20, 200, 25);
+        add(txtNombre);
+        
+        JLabel lblApellido = new JLabel("Apellido:");
+        lblApellido.setBounds(20, 60, 80, 25);
+        add(lblApellido);
+        
+        txtApellido = new JTextField();
+        txtApellido.setBounds(100, 60, 200, 25);
+        add(txtApellido);
+        
+        JLabel lblPuesto = new JLabel("Puesto:");
+        lblPuesto.setBounds(20, 100, 80, 25);
+        add(lblPuesto);
+        
+        comboBoxPuestos = new JComboBox<>();
+        comboBoxPuestos.setBounds(100, 100, 200, 25);
+        add(comboBoxPuestos);
+        llenarComboBoxPuestos();
+        
+        btnGuardar = new JButton("Guardar");
+        btnGuardar.setBounds(100, 140, 90, 25);
+        add(btnGuardar);
+        
+        btnActualizar = new JButton("Actualizar");
+        btnActualizar.setBounds(200, 140, 100, 25);
+        add(btnActualizar);
+        
+        btnEliminar = new JButton("Eliminar");
+        btnEliminar.setBounds(310, 140, 80, 25);
+        add(btnEliminar);
+        
+        btnGuardar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                guardarEmpleado();
+            }
+        });
+        
+        setVisible(true);
+    }
+    
+    private void llenarComboBoxPuestos() {
+        try {
+            Connection con = ConexionDB.conectar();
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM puestos");
+            ResultSet rs = ps.executeQuery();
+            
+            comboBoxPuestos.addItem("0) Elija Puesto");
+            while (rs.next()) {
+                comboBoxPuestos.addItem(rs.getString("nombre"));
+            }
+            
+            rs.close();
+            ps.close();
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private void guardarEmpleado() {
+        String nombre = txtNombre.getText();
+        String apellido = txtApellido.getText();
+        int puesto_id = comboBoxPuestos.getSelectedIndex(); // Obtiene el ID del puesto
+        
+        empleadoDAO.crearEmpleado(nombre, apellido, puesto_id);
+        JOptionPane.showMessageDialog(this, "Empleado guardado correctamente.");
+    }
+    
+    public static void main(String[] args) {
+        new FormularioEmpleado();
+    }
+}
