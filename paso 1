@@ -1,0 +1,20 @@
+Paso 1: Crear la base de datos en MySQL
+CREATE DATABASE gestion_empleados;
+
+USE gestion_empleados;
+
+CREATE TABLE puestos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100)
+);
+
+CREATE TABLE empleados (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100),
+    apellido VARCHAR(100),
+    puesto_id INT,
+    FOREIGN KEY (puesto_id) REFERENCES puestos(id)
+);
+
+-- Inserta algunos puestos de ejemplo
+INSERT INTO puestos (nombre) VALUES ('Gerente'), ('Desarrollador'), ('Soporte');
