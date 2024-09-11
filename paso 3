@@ -1,0 +1,60 @@
+Clase de CRUD para empleados
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class EmpleadoDAO {
+    
+    public void crearEmpleado(String nombre, String apellido, int puesto_id) {
+        Connection con = ConexionDB.conectar();
+        try {
+            PreparedStatement ps = con.prepareStatement("INSERT INTO empleados (nombre, apellido, puesto_id) VALUES (?, ?, ?)");
+            ps.setString(1, nombre);
+            ps.setString(2, apellido);
+            ps.setInt(3, puesto_id);
+            ps.executeUpdate();
+            ps.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public ResultSet leerEmpleados() {
+        Connection con = ConexionDB.conectar();
+        try {
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM empleados");
+            return ps.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void actualizarEmpleado(int id, String nombre, String apellido, int puesto_id) {
+        Connection con = ConexionDB.conectar();
+        try {
+            PreparedStatement ps = con.prepareStatement("UPDATE empleados SET nombre = ?, apellido = ?, puesto_id = ? WHERE id = ?");
+            ps.setString(1, nombre);
+            ps.setString(2, apellido);
+            ps.setInt(3, puesto_id);
+            ps.setInt(4, id);
+            ps.executeUpdate();
+            ps.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void eliminarEmpleado(int id) {
+        Connection con = ConexionDB.conectar();
+        try {
+            PreparedStatement ps = con.prepareStatement("DELETE FROM empleados WHERE id = ?");
+            ps.setInt(1, id);
+            ps.executeUpdate();
+            ps.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}
