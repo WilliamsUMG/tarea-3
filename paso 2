@@ -1,0 +1,15 @@
+Clase de Conexión a la Base de Datos
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class ConexionDB {
+    public static Connection conectar() {
+        try {
+            return DriverManager.getConnection("jdbc:mysql://localhost:3306/gestion_empleados", "root", ""); // Cambia el usuario y contraseña
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+}
